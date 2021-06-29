@@ -1,0 +1,509 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+ var app = require('../app');
+ var debug = require('debug')('iotserver:server');
+ var http = require('http');
+ 
+ /**
+  * Get port from environment and store in Express.
+  */
+ 
+ var port = normalizePort(process.env.PORT || '3000');
+ app.set('port', port);
+ 
+ /**
+  * Create HTTP server.
+  */
+ 
+ var server = http.createServer(app);
+ 
+ // Connect Mongo DB 
+ var mongoDB = require("mongodb").MongoClient;
+ var url = "mongodb://127.0.0.1:27017/IoTDB";
+ var dbObj = null;
+ mongoDB.connect(url, function(err, db){
+   dbObj = db;
+   console.log("DB connect");
+ });
+ 
+ /**
+  * MQTT subscriber (MQTT Server connection & Read resource data)
+  */
+ var mqtt = require("mqtt");
+ var client = mqtt.connect("mqtt://127.0.0.1")
+ 
+ // 접속에 성공하면, 다음 토픽을 구독.
+ client.on("connect", function(){
+    client.subscribe("all_1");    //all_1라는 topic 구독
+    console.log("Subscribing all_1");
+    client.subscribe("in_1");    // in_1 topic 구독
+    console.log("Subscribing in_1");
+    client.subscribe("out_1");    // out_1 topic 구독
+    console.log("Subscribing out_1");
+    client.subscribe("current_1");    // current_1 topic 구독
+    console.log("Subscribing current_1");
+    client.subscribe("condition_1");    // condition_1 topic 구독
+    console.log("Subscribing condition_1");
+    client.subscribe("percent_1");    // percent_1 topic 구독
+    console.log("Subscribing percent_1");
+
+    client.subscribe("all_2");    //all_2라는 topic 구독
+    console.log("Subscribing all_2");
+    client.subscribe("in_2");    // in_2 topic 구독
+    console.log("Subscribing in_2");
+    client.subscribe("out_2");    // out_2 topic 구독
+    console.log("Subscribing out_2");
+    client.subscribe("current_2");    // current_2 topic 구독
+    console.log("Subscribing current_2");
+    client.subscribe("condition_2");    // condition_2 topic 구독
+    console.log("Subscribing condition_2");
+    client.subscribe("percent_2");    // percent_2 topic 구독
+    console.log("Subscribing percent_2");
+
+    client.subscribe("all_3");    //all_3라는 topic 구독
+    console.log("Subscribing all_3");
+    client.subscribe("in_3");    // in_3 topic 구독
+    console.log("Subscribing in_3");
+    client.subscribe("out_3");    // out_3 topic 구독
+    console.log("Subscribing out_3");
+    client.subscribe("current_3");    // current_3 topic 구독
+    console.log("Subscribing current_3");
+    client.subscribe("condition_3");    // condition_3 topic 구독
+    console.log("Subscribing condition_3");
+    client.subscribe("percent_3");    // percent_3 topic 구독
+    console.log("Subscribing percent_3");
+ })
+
+// MQTT 응답 메세지 수신시 동작
+ client.on("message", function(topic, message){
+   console.log(message);
+   console.log(topic+ ": " + message.toString()); // 수신한 메세지 Topic 출력
+   var obj = JSON.parse(message); // 수신한 메세지의 데이터를 obj 저장
+   obj.create_at = new Date(); // 현재 날짜 데이터를 obj에 추가함.
+   console.log(obj);
+ 
+   // 수신한 메세지를 Mongo DB에 저장
+   if (topic == "all_1"){ // 만약 토픽이 all_1 라면,
+     var all_1  = dbObj.collection("all_1"); // all_1라는 이름을 갖는 collection 선택
+     all_1.save(obj, function(err, result){ // collection에 all_1 데이터 저장
+       if (err){
+         console.log(err);
+       }else{
+         console.log(JSON.stringify(result));
+       }
+     });
+   }else if (topic == "in_1"){ // 만약 토픽이 in_1 라면,
+    var in_1 = dbObj.collection("in_1"); // in_1 라는 이름을 갖는 collection 선택
+    in_1.save(obj, function(err, result){ // collection에 in_1 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }
+    });
+  }else if (topic == "out_1"){ // 만약 토픽이 out_1 라면,
+    var out_1 = dbObj.collection("out_1"); // out_1 라는 이름을 갖는 collection 선택
+    out_1.save(obj, function(err, result){ // collection에 out_1 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "current_1"){ // 만약 토픽이 current_1 라면,
+    var current_1 = dbObj.collection("current_1"); // current_1 라는 이름을 갖는 collection 선택
+    current_1.save(obj, function(err, result){ // collection에 current_1 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "condition_1"){ // 만약 토픽이 condition_1 라면,
+    var condition_1 = dbObj.collection("condition_1"); // condition_1 라는 이름을 갖는 collection 선택
+    condition_1.save(obj, function(err, result){ // collection에 condition_1 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "percent_1"){ // 만약 토픽이 percent_1 라면,
+    var percent_1 = dbObj.collection("percent_1"); // percent_1 라는 이름을 갖는 collection 선택
+    percent_1.save(obj, function(err, result){ // collection에 percent_1 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "all_2"){ // 만약 토픽이 all_2 라면,
+    var all_2  = dbObj.collection("all_2"); // all_2 라는 이름을 갖는 collection 선택
+    all_2.save(obj, function(err, result){ // collection에 all_2 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }
+    });
+  }else if (topic == "in_2"){ // 만약 토픽이 in_2 라면,
+   var in_2 = dbObj.collection("in_2"); // in_2 라는 이름을 갖는 collection 선택
+   in_2.save(obj, function(err, result){ // collection에 in_2 데이터 저장
+     if (err){
+       console.log(err);
+     }else{
+       console.log(JSON.stringify(result));
+     }
+   });
+ }else if (topic == "out_2"){ // 만약 토픽이 out_2 라면,
+   var out_2 = dbObj.collection("out_2"); // out_2 라는 이름을 갖는 collection 선택
+   out_2.save(obj, function(err, result){ // collection에 out_2 데이터 저장
+     if (err){
+       console.log(err);
+     }else{
+       console.log(JSON.stringify(result));
+     }		
+   });
+ }else if (topic == "current_2"){ // 만약 토픽이 current_2 라면,
+   var current_2 = dbObj.collection("current_2"); // current_2 라는 이름을 갖는 collection 선택
+   current_2.save(obj, function(err, result){ // collection에 current_2 데이터 저장
+     if (err){
+       console.log(err);
+     }else{
+       console.log(JSON.stringify(result));
+     }		
+   });
+ }else if (topic == "condition_2"){ // 만약 토픽이 condition_2 라면,
+  var condition_2 = dbObj.collection("condition_2"); // condition_2 라는 이름을 갖는 collection 선택
+  condition_2.save(obj, function(err, result){ // collection에 condition_2 데이터 저장
+    if (err){
+      console.log(err);
+    }else{
+      console.log(JSON.stringify(result));
+    }		
+  });
+}else if (topic == "percent_2"){ // 만약 토픽이 percent_2 라면,
+  var percent_2 = dbObj.collection("percent_2"); // percent_2 라는 이름을 갖는 collection 선택
+  percent_2.save(obj, function(err, result){ // collection에 percent_2 데이터 저장
+    if (err){
+      console.log(err);
+    }else{
+      console.log(JSON.stringify(result));
+    }		
+  });
+}else if (topic == "all_3"){ // 만약 토픽이 all_3 라면,
+     var all_3  = dbObj.collection("all_3"); // all_3라는 이름을 갖는 collection 선택
+     all_3.save(obj, function(err, result){ // collection에 all_3 데이터 저장
+       if (err){
+         console.log(err);
+       }else{
+         console.log(JSON.stringify(result));
+       }
+     });
+   }else if (topic == "in_3"){ // 만약 토픽이 in_3 라면,
+    var in_3 = dbObj.collection("in_3"); // in_3 라는 이름을 갖는 collection 선택
+    in_3.save(obj, function(err, result){ // collection에 in_3 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }
+    });
+  }else if (topic == "out_3"){ // 만약 토픽이 out_3 라면,
+    var out_3 = dbObj.collection("out_3"); // out_3 라는 이름을 갖는 collection 선택
+    out_3.save(obj, function(err, result){ // collection에 out_3 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "current_3"){ // 만약 토픽이 current_3 라면,
+    var current_3 = dbObj.collection("current_3"); // current_3 라는 이름을 갖는 collection 선택
+    current_3.save(obj, function(err, result){ // collection에 current_3 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "condition_3"){ // 만약 토픽이 condition_3 라면,
+    var condition_3 = dbObj.collection("condition_3"); // condition_3 라는 이름을 갖는 collection 선택
+    condition_3.save(obj, function(err, result){ // collection에 condition_3 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }		
+    });
+  }else if (topic == "percent_3"){ // 만약 토픽이 percent_3 라면,
+    var percent_3 = dbObj.collection("percent_3"); // percent_3 라는 이름을 갖는 collection 선택
+    percent_3.save(obj, function(err, result){ // collection에 percent_3 데이터 저장
+      if (err){
+        console.log(err);
+      }else{
+        console.log(JSON.stringify(result));
+      }
+    });
+  }
+ });
+
+ // Mongo DB에서 최근 데이터 불러와서, HTML 페이지에 업데이트
+var io = require("socket.io")(server);
+io.on("connection", function(socket){
+  socket.on("socket_bnt_one", function(data){
+    var all_1 = dbObj.collection("all_1"); // all_1 collection 선택
+    var in_1 = dbObj.collection("in_1"); // in_1 collection 선택
+    var out_1 = dbObj.collection("out_1"); // out_1 collection 선택
+    var current_1 = dbObj.collection("current_1"); // current_1 collection 선택
+    var condition_1 = dbObj.collection("condition_1"); // condition_1 collection 선택
+    var percent_1 = dbObj.collection("percent_1"); // percent_1 collection 선택
+    // all_1 데이터
+    all_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+    // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_all_1", JSON.stringify(results[0]));
+      }
+    });
+    // in_1 데이터
+    in_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_in_1", JSON.stringify(results[0]));
+      }
+    });
+    // out_1 데이터
+    out_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_out_1", JSON.stringify(results[0]));
+      }
+    });
+    // current_1 데이터
+    current_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_current_1", JSON.stringify(results[0]));
+      }
+    });
+    // condition_1 데이터
+    condition_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_condition_1", JSON.stringify(results[0]));
+      }
+    });
+    // percent_1 데이터
+    percent_1.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_percent_1", JSON.stringify(results[0]));
+      }
+    });
+  });
+  socket.on("socket_bnt_two", function(data){
+    var all_2 = dbObj.collection("all_2"); // all_2 collection 선택
+    var in_2 = dbObj.collection("in_2"); // in_2 collection 선택
+    var out_2 = dbObj.collection("out_2"); // out_2 collection 선택
+    var current_2 = dbObj.collection("current_2"); // current_2 collection 선택
+    var condition_2 = dbObj.collection("condition_2"); // condition_2 collection 선택
+    var percent_2 = dbObj.collection("percent_2"); // percent_2 collection 선택
+
+    // all_2 데이터
+    all_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_all_2", JSON.stringify(results[0]));
+      }
+    });
+    // in_2 데이터
+    in_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_in_2", JSON.stringify(results[0]));
+      }
+    });
+    // out_2 데이터
+    out_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_out_2", JSON.stringify(results[0]));
+      }
+    });
+    // current_2 데이터
+    current_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_current_2", JSON.stringify(results[0]));
+      }
+    });
+    // condition_2 데이터
+    condition_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_condition_2", JSON.stringify(results[0]));
+      }
+    });
+    // percent_2 데이터
+    percent_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_percent_2", JSON.stringify(results[0]));
+      }
+    });
+    // condition_2 데이터
+    condition_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_condition_2", JSON.stringify(results[0]));
+      }
+    });
+    // percent_2 데이터
+    percent_2.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_percent_2", JSON.stringify(results[0]));
+      }
+    });
+  });
+
+  socket.on("socket_bnt_three", function(data){
+
+    var all_3 = dbObj.collection("all_3"); // all_3 collection 선택
+    var in_3 = dbObj.collection("in_3"); // in_3 collection 선택
+    var out_3 = dbObj.collection("out_3"); // out_3 collection 선택
+    var current_3 = dbObj.collection("current_3"); // current_3 collection 선택
+    var condition_3 = dbObj.collection("condition_3"); // condition_3 collection 선택
+    var percent_3 = dbObj.collection("percent_3"); // percent_3 collection 선택
+
+    // all_3 데이터
+    all_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_all_3", JSON.stringify(results[0]));
+      }
+    });
+    // in_3 데이터
+    in_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+          console.log(results[0]);
+          socket.emit("socket_evt_in_3", JSON.stringify(results[0]));
+      }
+    });
+    // out_3 데이터
+    out_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+          console.log(results[0]);
+          socket.emit("socket_evt_out_3", JSON.stringify(results[0]));
+      }
+    });
+    // current_3 데이터
+    current_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+          console.log(results[0]);
+          socket.emit("socket_evt_current_3", JSON.stringify(results[0]));
+      }
+    });
+    // condition_3 데이터
+    condition_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_condition_3", JSON.stringify(results[0]));
+      }
+    });
+    // percent_3 데이터
+    percent_3.find({}).sort({_id:-1}).limit(1).toArray(function(err, results){
+      // collection에서 가장 최근 데이터 정렬-> 하나의 데이터만 불러옴 -> 배열로 만듬
+      if(!err){
+        console.log(results[0]);
+        socket.emit("socket_evt_percent_3", JSON.stringify(results[0]));
+      }
+    });
+  });
+});
+ /**
+  * Listen on provided port, on all network interfaces.
+  */
+ server.listen(port);
+ server.on('error', onError);
+ server.on('listening', onListening);
+ 
+ /**
+  * Normalize a port into a number, string, or false.
+  */
+ function normalizePort(val) {
+   var port = parseInt(val, 10);
+   if (isNaN(port)) {
+     // named pipe
+     return val;
+   }
+   if (port >= 0) {
+     // port number
+     return port;
+   }
+   return false;
+ }
+ 
+ /**
+  * Event listener for HTTP server "error" event.
+  */
+ 
+ function onError(error) {
+   if (error.syscall !== 'listen') {
+     throw error;
+   }
+ 
+   var bind = typeof port === 'string'
+     ? 'Pipe ' + port
+     : 'Port ' + port;
+ 
+   // handle specific listen errors with friendly messages
+   switch (error.code) {
+     case 'EACCES':
+       console.error(bind + ' requires elevated privileges');
+       process.exit(1);
+       break;
+     case 'EADDRINUSE':
+       console.error(bind + ' is already in use');
+       process.exit(1);
+       break;
+     default:
+       throw error;
+   }
+ }
+ 
+ /**
+  * Event listener for HTTP server "listening" event.
+  */
+ 
+ function onListening() {
+   var addr = server.address();
+   var bind = typeof addr === 'string'
+     ? 'pipe ' + addr
+     : 'port ' + addr.port;
+   debug('Listening on ' + bind);
+ }
+ 

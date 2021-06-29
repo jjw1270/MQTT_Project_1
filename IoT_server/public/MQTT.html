@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<meta charset="UTF-8">
+<title>김포국제공항 주차장 현황</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script>
+	var socket = io.connect();
+
+	function kor(conddition){
+		if (conddition == "good"){
+			condition = "원활";
+		}else if(conddition == "full"){
+			condition = "만차";
+		}else if(conddition == "congested"){
+			condition = "혼잡";
+		}
+		return condition;
+	}
+
+	function button_one(){
+		socket.emit("socket_bnt_one", JSON.stringify({}));
+
+		$("#place").html("<h3>국내선 제1주차장</h3>");
+		socket.on("socket_evt_all_1", function(data){
+			data = JSON.parse(data);
+			$("#all").html("<p>전체 주차면 수 : "+data.all_1 +"대<br></p>");
+		});
+		socket.on("socket_evt_in_1", function(data){
+			data = JSON.parse(data);
+			$("#in").html("<p>시간당 들어온 차량 수 : " + data.in_1 +"대<br></p>");
+		});
+		socket.on("socket_evt_out_1", function(data){
+			data = JSON.parse(data);
+			$("#out").html("<p>시간당 나간 차량 수 : " + data.out_1 +"대<br></p>");
+		});
+		socket.on("socket_evt_current_1", function(data){
+			data = JSON.parse(data);
+			$("#current").html("<p>현재 주차되어 있는 차량 수 : " + data.current_1 +"대<br></p>");
+		});
+		socket.on("socket_evt_percent_1", function(data){
+			data = JSON.parse(data);
+			$("#percent").html("<h3>혼잡률 : " + data.percent_1 +"</h3>");
+		});
+		socket.on("socket_evt_condition_1", function(data){
+			data = JSON.parse(data);
+			condition = kor(data.condition_1);
+			$("#condition").html("<h1> " + condition +"</h1>");
+		});
+	}
+
+	function button_two(){
+		socket.emit("socket_bnt_two", JSON.stringify({}));
+		
+		$("#place").html("<h3>국내선 제2주차장</h3>");
+		socket.on("socket_evt_all_2", function(data){
+			data = JSON.parse(data);
+			$("#all").html("<p>전체 주차면 수 : "+data.all_2 +"대<br></p>");
+		});
+		socket.on("socket_evt_in_2", function(data){
+			data = JSON.parse(data);
+			$("#in").html("<p>시간당 들어온 차량 수 : " + data.in_2 +"대<br></p>");
+		});
+		socket.on("socket_evt_out_2", function(data){
+			data = JSON.parse(data);
+			$("#out").html("<p>시간당 나간 차량 수 : " + data.out_2 +"대<br></p>");
+		});
+		socket.on("socket_evt_current_2", function(data){
+			data = JSON.parse(data);
+			$("#current").html("<p>현재 주차되어 있는 차량 수 : " + data.current_2 +"대<br></p>");
+		});
+		socket.on("socket_evt_percent_2", function(data){
+			data = JSON.parse(data);
+			$("#percent").html("<h3>혼잡률 : " + data.percent_2 +"</h3>");
+		});
+		socket.on("socket_evt_condition_2", function(data){
+			data = JSON.parse(data);
+			condition = kor(data.condition_2);
+			$("#condition").html("<h1> " + condition +"</h1>");
+		});
+	}
+
+	function button_three(){
+		socket.emit("socket_bnt_three", JSON.stringify({}));
+
+		$("#place").html("<h3>국제선 지하주차장</h3>");
+		socket.on("socket_evt_all_3", function(data){
+			data = JSON.parse(data);
+			$("#all").html("<p>전체 주차면 수 : "+data.all_3 +"대<br></p>");
+		});
+		socket.on("socket_evt_in_3", function(data){
+			data = JSON.parse(data);
+			$("#in").html("<p>시간당 들어온 차량 수 : " + data.in_3 +"대<br></p>");
+		});
+		socket.on("socket_evt_out_3", function(data){
+			data = JSON.parse(data);
+			$("#out").html("<p>시간당 나간 차량 수 : " + data.out_3 +"대<br></p>");
+		});
+		socket.on("socket_evt_current_3", function(data){
+			data = JSON.parse(data);
+			$("#current").html("<p>현재 주차되어 있는 차량 수 : " + data.current_3 +"대<br></p>");
+		});
+		socket.on("socket_evt_percent_3", function(data){
+			data = JSON.parse(data);
+			$("#percent").html("<h3>혼잡률 : " + data.percent_3 +"</h3>");
+		});
+		socket.on("socket_evt_condition_3", function(data){
+			data = JSON.parse(data);
+			condition = kor(data.condition_3);
+			$("#condition").html("<h1> " + condition +"</h1>");
+		});
+	}
+
+</script>
+</head>
+<body>
+	<h3>김포국제공항</h3>
+	<div id="msg">
+		<div id="mqtt_logs">
+			<h1>주차장 현황</h1>
+			<button id="button1" onclick="button_one()"><b>국내선 제1주차장</b></button>
+			<button id="button2" onclick="button_two()"><b>국내선 제2주차장</b></button>
+			<button id="button3" onclick="button_three()"><b>국제선 지하주차장</b></button>
+		</div>
+		<div id = "place"></div>
+		<div id = "all"></div>
+		<div id = "in"></div>
+		<div id = "out"></div>
+		<div id = "current"></div>
+		<div id = "percent"></div>
+		<div id = "condition"></div>
+	</div>
+</body>
+</html>
